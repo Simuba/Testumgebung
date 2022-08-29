@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        table, th, td
+        {
+            border: solid 1px #ddd;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+        th {
+            font-weight:bold;
+        }
+    </style>
+
+</head>
+<body>
+  <button onclick="myFunction()">Click</button>
+
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet animi atque corporis cumque doloremque enim, itaque magnam minus nostrum, nulla quasi qui quisquam, quo rerum saepe sequi sint suscipit voluptas.</p>
+
+  <script>
+    function myFunction (){
+
+        /* Tabelle H+ */
+        const params = {
+            season: "2021",
+            game_class: "12",
+            league: "3",
+            group: "Gruppe 1"
+        }
+
+        /* Teamliste UHCO */
+        const params1 = {
+            mode : "by_club",
+            club_id : "666",
+            season: "2022",
+        }
+
+        /* Spiele UHCO */
+        const params2 = {
+            mode : "club",
+            club_id : "666",
+            season: "2022",
+        }
+
+        /* Spiele H1 */
+        const params3 = {
+            mode : "team",
+            team_id : "428030",
+            season: "2022",
+        }
+
+        let paramString = "";
+        Object.entries(params1).forEach(entry => {
+            const [key, value] = entry;
+            if (paramString == "") {
+                paramString = "?";
+            }
+            else {
+                paramString = paramString+"&";
+            }
+            paramString = paramString+key+"="+value;
+        });
+
+      const xhttp = new XMLHttpRequest();
+      xhttp.addEventListener("load", reqListener);
+      //xhttp.open("GET", "https://api-v2.swissunihockey.ch/api/rankings"+paramString, true);
+      xhttp.open("GET", "https://api-v2.swissunihockey.ch/api/teams"+paramString, true);
+      xhttp.send();
+    }
+
+;
+    function reqListener () {
+        let data = this.responseText;
+
+        console.log(JSON.parse(data))
+
+        console.log("Titel: "+JSON.parse(data).data.title)
+
+        let arrHeader = JSON.parse(data).data.headers
+        arrHeader.forEach(element =>{
+            console.log(element.text)
+        })
+
+        let arrTableRows = JSON.parse(data).data.regions[0].rows;
+        arrTableRows.forEach(element =>{
+            console.log(element.cells[2].text[0])
+        })
+
+    }
+  </script>
+
+</body>
+</html>
